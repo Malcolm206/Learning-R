@@ -27,7 +27,7 @@ select_all(m_data)
 
 duplicated(m_data$movie)
 m_data[!duplicated(m_data$movie), ]
-which(m_data$worldwide_gross == '$0')
+which(m_data$worldwide_gross != '$0')
 
 
 gsub(',', '', m_data$worldwide_gross)
@@ -35,8 +35,33 @@ gsub('$', '', m_data$worldwide_gross)
 as.numeric(worldwide_gross)
 
 clean_dollars <- function(d) {
-  a <- gsub(',', '', d)
-  b <- gsub('$', '', a)
-  b
+  a <- as.numeric(gsub("[$,]", "", d))
+  a
 }
 clean_dollars(m_data$worldwide_gross)
+select(m_data, genres)
+
+rem_unnec_val <- function(df) {
+  a <- df[!duplicated(df$movie), ]
+  b <- a[which(a$worldwide_gross != '$0'), ]
+  b
+}
+rem_unnec_val(m_data)
+
+ind_str_parser <- function(df, parsed_column_str, list_strings) {
+  x <- dataframe
+}
+
+cl_data <- function(df) {
+  x <- rem_unnec_val(df)
+  y <- x
+  y$worldwide_gross <- clean_dollars(x$worldwide_gross)
+  y$domestic_gross <- clean_dollars(x$domestic_gross)
+  y$production_budget <- clean_dollars(x$production_budget)
+  y$advertisement_budget = y$production_budget
+  y$total_costs = y$advertisement_budget + y$production_budget
+  y$profit = y$worldwide_gross - y$total_costs
+  y$ROI = y$profit / y$total_costs * 100
+  y
+}
+cl_data(m_data)
