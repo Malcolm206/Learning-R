@@ -24,3 +24,19 @@ budgets$start_year <- as.numeric(as.character(budgets$start_year))
 
 m_data <- inner_join(basics, budgets, by = c("movie", "start_year"))
 select_all(m_data)
+
+duplicated(m_data$movie)
+m_data[!duplicated(m_data$movie), ]
+which(m_data$worldwide_gross == '$0')
+
+
+gsub(',', '', m_data$worldwide_gross)
+gsub('$', '', m_data$worldwide_gross)
+as.numeric(worldwide_gross)
+
+clean_dollars <- function(d) {
+  a <- gsub(',', '', d)
+  b <- gsub('$', '', a)
+  b
+}
+clean_dollars(m_data$worldwide_gross)
