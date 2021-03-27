@@ -49,7 +49,25 @@ rem_unnec_val <- function(df) {
 rem_unnec_val(m_data)
 
 ind_str_parser <- function(df, parsed_column_str, list_strings) {
-  x <- dataframe
+  list_of_series <- list()
+  # iterates through a list of genres
+  for (string in list_strings) {
+    # we create a list of 1 or 0 to check if the genre is a part of the obs.
+    presence <- list()
+    # for each genre, we check the genres in each observation
+    for (x in df$parsed_column_str) {
+      # we check if the observation has the genre
+      if (string %in% x) {
+        presence <- c(presence, 1)
+      } else {
+        presence <- c(presence, 0)
+      }
+      new_column_name <- parsed_column_str + '_' + string + '_id'
+    df$new_column_name <- presence
+    list_of_series <- c(list_of_series, df$new_column_name)
+    }
+    
+  }
 }
 
 cl_data <- function(df) {
