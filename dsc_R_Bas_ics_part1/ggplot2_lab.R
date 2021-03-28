@@ -49,6 +49,16 @@ rem_unnec_val <- function(df) {
 rem_unnec_val(m_data)
 
 ind_str_parser <- function(df, parsed_column_str, list_strings) {
+  df$parsed_column_str[df$parsed_column_str == "NULL"] <- 'none'
+  no_genre_list = list()
+  for (x in df$parsed_column_str) {
+    if (x == 'none') {
+      no_genre_list <- c(no_genre_list, 1)
+    } else {
+      no_genre_list <- c(no_genre_list, 0)
+    }
+  }
+  df$genres_not_parsed_id <- no_genre_list
   list_of_series <- list()
   # iterates through a list of genres
   for (string in list_strings) {
@@ -66,9 +76,13 @@ ind_str_parser <- function(df, parsed_column_str, list_strings) {
     df$new_column_name <- presence
     list_of_series <- c(list_of_series, df$new_column_name)
     }
-    
   }
+  df$genres_tuple = list(zip(genres_tuple, list_of_series))
+  return(df)
 }
+
+ind_str_parser(m_data, genres, list('Action', 'Adventure', 'Comedy', 'Drama', 'Family', 'Thriller', 'Documentary'))
+m_data$genres
 
 cl_data <- function(df) {
   x <- rem_unnec_val(df)
