@@ -49,9 +49,9 @@ rem_unnec_val <- function(df) {
 rem_unnec_val(m_data)
 
 ind_str_parser <- function(df, parsed_column_str, list_strings) {
-  df$parsed_column_str[df$parsed_column_str == "NULL"] <- 'none'
+  df[parsed_column_str][df[parsed_column_str] == "NULL"] <- 'none'
   no_genre_list = list()
-  for (x in df$parsed_column_str) {
+  for (x in df[parsed_column_str]) {
     if (x == 'none') {
       no_genre_list <- c(no_genre_list, 1)
     } else {
@@ -65,24 +65,42 @@ ind_str_parser <- function(df, parsed_column_str, list_strings) {
     # we create a list of 1 or 0 to check if the genre is a part of the obs.
     presence <- list()
     # for each genre, we check the genres in each observation
-    for (x in df$parsed_column_str) {
+    for (x in df[parsed_column_str]) {
       # we check if the observation has the genre
       if (string %in% x) {
         presence <- c(presence, 1)
       } else {
         presence <- c(presence, 0)
       }
-      new_column_name <- parsed_column_str + '_' + string + '_id'
-    df$new_column_name <- presence
-    list_of_series <- c(list_of_series, df$new_column_name)
+    new_column_name <- paste(parsed_column_str, string, 'id', sep = "_")
+    df['new'] <- presence
+    colnames(df)[colnames(df) == 'new'] <- new_column_name
+    list_of_series <- c(list_of_series, df[new_column_name])
     }
   }
-  df$genres_tuple = list(zip(genres_tuple, list_of_series))
+  df$genres_tuple = list(expand.grid(list_of_series[]))
   return(df)
 }
 
-ind_str_parser(m_data, genres, list('Action', 'Adventure', 'Comedy', 'Drama', 'Family', 'Thriller', 'Documentary'))
-m_data$genres
+genres_list <- list('Action', 'Adventure', 'Comedy', 'Drama', 'Family', 'Thriller', 'Documentary')
+genres_list
+ind_str_parser(df = m_data, parsed_column_str = 'genres', list_strings =  genres_list)
+m_data["genres"]
+
+budgets_level <- function(df) {
+  budget_category = list()
+  for (x in df.budget) {
+    if (x < 25000000) {
+      budget_category <- c(budget_category, 'low')
+    } else if (x < 100000000) {
+      budget_category <- c(budget_category, 'mid')
+    } else {
+      budget_category <- c(budget_category, 'high')
+    }
+  }
+  df$budget_category <- budget_category
+  return(df)
+}
 
 cl_data <- function(df) {
   x <- rem_unnec_val(df)
