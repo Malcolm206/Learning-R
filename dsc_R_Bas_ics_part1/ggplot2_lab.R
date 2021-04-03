@@ -1,6 +1,7 @@
 library(dplyr)
 library(readr)
 library(ggplot2)
+library(tidyverse)
 
 df_title_basics <- read_csv("imdb.title.basics.csv")
 df_movie_budgets <- read_csv("tn.movie_budgets.csv")
@@ -49,7 +50,7 @@ rem_unnec_val <- function(df) {
 rem_unnec_val(m_data)
 
 ind_str_parser <- function(df, parsed_column_str, list_strings) {
-  df <- replace(df[parsed_column_str], c("NULL", "NA"), "none")
+  df <- replace(df, c("NULL", "NA"), "none")
   no_genre_list = list()
   for (x in df[parsed_column_str]) {
     if (identical(x, 'none')) {
@@ -67,18 +68,14 @@ ind_str_parser <- function(df, parsed_column_str, list_strings) {
     # for each genre, we check the genres in each observation
     for (x in df[parsed_column_str]) {
       # we check if the observation has the genre
-      if (string %in% x) {
-        presence <- c(presence, 1)
-      } else {
-        presence <- c(presence, 0)
-      }
+      presence <- c(presence, ifelse(str_detect(string, x), 1, 0))
     new_column_name <- paste(parsed_column_str, string, 'id', sep = "_")
     df['new'] <- presence
     colnames(df)[colnames(df) == 'new'] <- new_column_name
     list_of_series <- c(list_of_series, df[new_column_name])
     }
   }
-  df$genres_tuple = list(expand.grid(list_of_series[]))
+  df$genres_tuple = list(c(list_of_series[]))
   return(df)
 }
 
@@ -91,7 +88,7 @@ m_data["genres"]
 
 budgets_level <- function(df) {
   budget_category = list()
-  for (x in df.budget) {
+  for (x in df$total_costs) {
     if (x < 25000000) {
       budget_category <- c(budget_category, 'low')
     } else if (x < 100000000) {
@@ -115,6 +112,23 @@ cl_data <- function(df) {
   y$profit = y$worldwide_gross - y$total_costs
   y$ROI = y$profit / y$total_costs * 100
   y <- budgets_level(y)
-  y
+  genres_list <- list('Action', 'Adventure', 'Comedy', 'Drama', 'Family', 'Thriller', 'Documentary')
+  y <- ind_str_parser(df = y, parsed_column_str = 'genres', list_strings =  genres_list)
+  return(y)
 }
-cl_data(m_data)
+
+
+clean_data <- cl_data(m_data)
+
+pres <- list()
+for (string in genres_list) {
+  for (x in m_data['genres']) {
+    if (string %in% x) {
+      pres <- c(pres, 1)
+    } else {
+      pres <- c(pres, 0)
+    }
+  }
+}
+
+ifelse(str_detect("school, college, academy, university", pattern = "academy"), print('YAY'), print("Boo"))
