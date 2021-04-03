@@ -49,10 +49,10 @@ rem_unnec_val <- function(df) {
 rem_unnec_val(m_data)
 
 ind_str_parser <- function(df, parsed_column_str, list_strings) {
-  df[parsed_column_str][df[parsed_column_str] == "NULL"] <- 'none'
+  df <- replace(df[parsed_column_str], c("NULL", "NA"), "none")
   no_genre_list = list()
   for (x in df[parsed_column_str]) {
-    if (x == 'none') {
+    if (identical(x, 'none')) {
       no_genre_list <- c(no_genre_list, 1)
     } else {
       no_genre_list <- c(no_genre_list, 0)
@@ -81,6 +81,8 @@ ind_str_parser <- function(df, parsed_column_str, list_strings) {
   df$genres_tuple = list(expand.grid(list_of_series[]))
   return(df)
 }
+
+
 
 genres_list <- list('Action', 'Adventure', 'Comedy', 'Drama', 'Family', 'Thriller', 'Documentary')
 genres_list
@@ -112,6 +114,7 @@ cl_data <- function(df) {
   y$total_costs = y$advertisement_budget + y$production_budget
   y$profit = y$worldwide_gross - y$total_costs
   y$ROI = y$profit / y$total_costs * 100
+  y <- budgets_level(y)
   y
 }
 cl_data(m_data)
