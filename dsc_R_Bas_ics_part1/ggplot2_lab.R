@@ -68,10 +68,9 @@ ind_str_parser <- function(df, parsed_column_str, list_strings) {
     # for each genre, we check the genres in each observation
     for (x in df[parsed_column_str]) {
       # we check if the observation has the genre
-      presence <- c(presence, ifelse(str_detect(string, x), 1, 0))
-    new_column_name <- paste(parsed_column_str, string, 'id', sep = "_")
-    df['new'] <- presence
-    colnames(df)[colnames(df) == 'new'] <- new_column_name
+      df['new'] <- ifelse(str_detect(x, pattern = string), 1, 0)
+      new_column_name <- paste(parsed_column_str, string, 'id', sep = "_")
+      colnames(df)[colnames(df) == 'new'] <- new_column_name
     list_of_series <- c(list_of_series, df[new_column_name])
     }
   }
@@ -123,11 +122,8 @@ clean_data <- cl_data(m_data)
 pres <- list()
 for (string in genres_list) {
   for (x in m_data['genres']) {
-    if (string %in% x) {
-      pres <- c(pres, 1)
-    } else {
-      pres <- c(pres, 0)
-    }
+    x = ifelse(str_detect(x, string), 1, 0)
+    print(x)
   }
 }
 
