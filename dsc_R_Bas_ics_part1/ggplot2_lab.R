@@ -49,6 +49,10 @@ rem_unnec_val <- function(df) {
 }
 rem_unnec_val(m_data)
 
+reduce <- function(x) {
+  unname(x[!is.na(x)])
+}
+
 ind_str_parser <- function(df, parsed_column_str, list_strings) {
   df <- replace(df, c("NULL", "NA"), "none")
   no_genre_list = list()
@@ -74,7 +78,9 @@ ind_str_parser <- function(df, parsed_column_str, list_strings) {
     list_of_series <- c(list_of_series, df[new_column_name])
     }
   }
-  df$genres_tuple = list(c(list_of_series[]))
+  df <- df %>%
+    rowwise() %>%
+    mutate(genres_tuple = list(c_across(genres_Action_id : genres_Documentary_id)))
   return(df)
 }
 
