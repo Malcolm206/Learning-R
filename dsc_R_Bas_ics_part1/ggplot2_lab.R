@@ -125,12 +125,16 @@ cl_data <- function(df) {
 
 clean_data <- cl_data(m_data)
 
-pres <- list()
-for (string in genres_list) {
-  for (x in m_data['genres']) {
-    x = ifelse(str_detect(x, string), 1, 0)
-    print(x)
+low_budget_genres <- function(df) {
+  r <- list()
+  for (x in list(1, 2, 3, 4, 5, 6, 7)) {
+    ftr <- df[which(df$total_costs < 25000000), ]
+    for (y in 1:length(ftr)) {
+      g_ftr <- df[which(df$genres_tuple[[y]][x] == 1), ]
+    r <- c(r, c(g_ftr, genres_list[x]))
+    }
   }
 }
 
-ifelse(str_detect("school, college, academy, university", pattern = "academy"), print('YAY'), print("Boo"))
+print(low_budget_genres(clean_data))
+clean_data$genres_tuple[[1]]
