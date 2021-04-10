@@ -127,14 +127,42 @@ clean_data <- cl_data(m_data)
 
 low_budget_genres <- function(df) {
   r <- list()
+  d <- df
   for (x in list(1, 2, 3, 4, 5, 6, 7)) {
-    ftr <- df[which(df$total_costs < 25000000), ]
-    for (y in 1:length(ftr)) {
-      g_ftr <- df[which(df$genres_tuple[[y]][x] == 1), ]
-    r <- c(r, c(g_ftr, genres_list[x]))
-    }
+    d['new'] <- sapply(d$genres_tuple, '[[', x)
+    ftr <- median(d[which(d$total_costs < 25000000 & d$new == 1), ]$ROI)
+    r <- c(r, ftr)
   }
+  new_df <- data.frame(Median_ROI = unlist(r), Genres = unlist(genres_list))
+  return(new_df)
 }
 
-print(low_budget_genres(clean_data))
-clean_data$genres_tuple[[1]]
+mid_budget_genres <- function(df) {
+  r <- list()
+  d <- df
+  for (x in list(1, 2, 3, 4, 5, 6, 7)) {
+    d['new'] <- sapply(d$genres_tuple, '[[', x)
+    ftr <- median(d[which(d$total_costs >= 25000000 & 
+                            d$total_costs < 100000000 &
+                            d$new == 1), ]$ROI)
+    r <- c(r, ftr)
+  }
+  new_df <- data.frame(Median_ROI = unlist(r), Genres = unlist(genres_list))
+  return(new_df)
+}
+
+high_budget_genres <- function(df) {
+  r <- list()
+  d <- df
+  for (x in list(1, 2, 3, 4, 5, 6, 7)) {
+    d['new'] <- sapply(d$genres_tuple, '[[', x)
+    ftr <- median(d[which(d$total_costs > 100000000 & d$new == 1), ]$ROI)
+    r <- c(r, ftr)
+  }
+  new_df <- data.frame(Median_ROI = unlist(r), Genres = unlist(genres_list))
+  return(new_df)
+}
+
+low_budget_g <- low_budget_genres(clean_data)
+sapply(clean_data$genres_tuple, '[[', 1)
+median(clean_data[which(clean_data$total_costs < 25000000), ]$ROI)
