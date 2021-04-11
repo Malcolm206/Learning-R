@@ -164,6 +164,8 @@ high_budget_genres <- function(df) {
 }
 
 low_budget_g <- low_budget_genres(clean_data)
+mid_budget_g <- mid_budget_genres(clean_data)
+high_budget_g <- high_budget_genres(clean_data)
 sapply(clean_data$genres_tuple, '[[', 1)
 median(clean_data[which(clean_data$total_costs < 25000000), ]$ROI)
 
@@ -173,3 +175,19 @@ low_budget_g %>%
   labs(title = "Median ROI for Low Budget Films by Genre", 
        x = 'Genres', 
        y = "Return on Investment")
+
+mid_budget_g %>%
+  ggplot(aes(x = Genres, y = Median_ROI)) +
+  geom_bar(stat = 'identity') +
+  labs(title = "Median ROI for Mid Budget Films by Genre", 
+       x = 'Genres', 
+       y = "Return on Investment")
+
+high_budget_g %>%
+  ggplot(aes(x = Genres, y = Median_ROI)) +
+  geom_bar(stat = 'identity') +
+  labs(title = "Median ROI for High Budget Films by Genre", 
+       x = 'Genres', 
+       y = "Return on Investment")
+
+
