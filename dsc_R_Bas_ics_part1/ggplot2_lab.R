@@ -197,3 +197,25 @@ clean_data %>%
        y = 'Return on Investment (ROI %)',
        x = 'Movie Budget ($)') +
   coord_cartesian(ylim = c(-200, 1500))
+
+clean_data[which(clean_data$budget_category == 'low'), ] %>%
+  ggplot(aes_string(x = 'total_costs', y = 'ROI')) +
+  geom_point(stat = 'identity', alpha = 0.5) +
+  labs(title = 'Low Budget Films Return on Investment', 
+       x = 'Movie Budget ($)', 
+       y = 'Return on Investment (%)') +
+  coord_cartesian(ylim = c(-500, 3500))
+
+clean_data[which(clean_data$budget_category == 'mid'), ] %>%
+  ggplot(aes_string(x = 'total_costs', y = 'ROI')) +
+  geom_point(stat = 'identity', alpha = 0.5) +
+  labs(title = 'Mid Budget Films Return on Investment', 
+       x = 'Movie Budget ($)', 
+       y = 'Return on Investment (%)')
+
+clean_data[which(clean_data$budget_category == 'high'), ] %>%
+  ggplot(aes_string(x = 'total_costs', y = 'ROI')) +
+  geom_point(stat = 'identity', alpha = 0.5) +
+  labs(title = 'High Budget Films Return on Investment', 
+       x = 'Movie Budget ($)', 
+       y = 'Return on Investment (%)')
