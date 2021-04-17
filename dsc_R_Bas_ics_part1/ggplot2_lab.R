@@ -190,4 +190,10 @@ high_budget_g %>%
        x = 'Genres', 
        y = "Return on Investment")
 
-
+clean_data %>%
+  ggplot(aes_string(x = 'total_costs', y = 'ROI')) +
+  geom_point(stat = 'identity', alpha = 0.5) +
+  labs(title = "Relationship Between Movie Budgets and ROI", 
+       y = 'Return on Investment (ROI %)',
+       x = 'Movie Budget ($)') +
+  coord_cartesian(ylim = c(-200, 1500))
