@@ -223,8 +223,10 @@ clean_data[which(clean_data$budget_category == 'high'), ] %>%
 
 clean_data %>%
   ggplot(aes(x = budget_category, y = ROI)) +
-  geom_boxplot() +
+  geom_boxplot(outlier.shape = NA) +
   labs(title = 'Distribution of Return on Investment Percentage Grouped by Budget Tier',
        x = 'Budget Tier', 
-       y = 'Return on Investment (%)')
+       y = 'Return on Investment (%)') +
+  coord_cartesian(ylim = c(-100, 650))
+
 
