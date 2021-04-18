@@ -102,6 +102,7 @@ budgets_level <- function(df) {
       budget_category <- c(budget_category, 'high')
     }
   }
+  budget_category = unlist(budget_category, use.names = FALSE)
   df$budget_category <- budget_category
   return(df)
 }
@@ -220,8 +221,8 @@ clean_data[which(clean_data$budget_category == 'high'), ] %>%
        x = 'Movie Budget ($)', 
        y = 'Return on Investment (%)')
 
-clean_data
-  ggplot(aes(x = , y = ROI)) +
+clean_data %>%
+  ggplot(aes(x = budget_category, y = ROI)) +
   geom_boxplot() +
   labs(title = 'Distribution of Return on Investment Percentage Grouped by Budget Tier',
        x = 'Budget Tier', 
